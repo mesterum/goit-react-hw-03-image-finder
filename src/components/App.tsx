@@ -70,11 +70,11 @@ export default class App extends Component<Props, State> {
     return (
       <div>
 
-        <Searchbar />
-        <ImageGallery />
+        <Searchbar setQuery={s => this.setState({ query: s })} />
+        {/* <ImageGallery />
         <Loader />
         <Button />
-        <Modal />
+        <Modal /> */}
 
       </div>
     )
