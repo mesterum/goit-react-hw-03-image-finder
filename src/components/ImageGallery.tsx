@@ -1,18 +1,41 @@
 import PropTypes from "prop-types";
-// import styled from "styled-components";
+import styled from "styled-components";
+import ImageGalleryItem from "./ImageGalleryItem";
+import { Image } from "./App";
 
-type Props = { filter: string, setFilter: (filter: string) => void }
-
-export default function Filter(props: Props) {
+type Props = { images: Image[] }
+const StyledUl = styled.ul`
+  display: grid;
+  max-width: calc(100vw - 48px);
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(320px, 1fr)
+  );
+  grid-gap: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  list-style: none;
+  margin-left: auto;
+  margin-right: auto;
+`
+export default function ImageGallery({ images }: Props) {
   return (
-    <label>
-      Find contacts by name<br />
-      <input value={props.filter} onChange={e => props.setFilter(e.target.value)} id="search" />
-    </label>
+    <StyledUl>
+      {images.map((image, index) => (
+        <ImageGalleryItem key={index} image={image} />
+      ))}
+    </StyledUl>
   )
 }
 
-Filter.propTypes = {
-  filter: PropTypes.string.isRequired,
-  setFilter: PropTypes.func.isRequired,
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      tags: PropTypes.string.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+    }).isRequired
+  ).isRequired,
 };

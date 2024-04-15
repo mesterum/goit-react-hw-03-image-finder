@@ -1,15 +1,15 @@
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-type Props = { className?: string, setQuery: (query: string) => void }
+type Props = { className?: string, onSubmit: (query: string) => void }
 
-function Searchbar({ className, setQuery }: Props) {
+function Searchbar({ className, onSubmit }: Props) {
   return (
     <header className={className}>
       <form className="form" onSubmit={(e) => {
         const currentTarget = e.currentTarget as HTMLFormElement & { elements: { query: HTMLInputElement } }
         e.preventDefault()
-        setQuery(currentTarget.elements.query.value)
+        onSubmit(currentTarget.elements.query.value)
       }}>
         <button type="submit" className="button">
           <span className="button-label">Search</span>
@@ -30,7 +30,7 @@ function Searchbar({ className, setQuery }: Props) {
 
 Searchbar.propTypes = {
   className: PropTypes.string,
-  setQuery: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default styled(Searchbar)`

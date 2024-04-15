@@ -2,45 +2,43 @@ import './App.css'
 import { Component } from "react";
 import Searchbar from "./Searchbar";
 import ImageGallery from "./ImageGallery";
-// import ImageGalleryItem from "./ImageGalleryItem";
 import Loader from "./Loader";
 import Button from "./Button";
 import Modal from "./Modal";
+import { getPhotos } from '../pixabayAPI';
+import styled from 'styled-components';
 
 
-type Image = {
+export type Image = {
   id: number;
-  // pageURL?: string;
-  // type?: string;
-  // tags?: string;
+  tags: string;
   webformatURL: string;
-  webformatWidth?: number;
-  webformatHeight?: number;
   largeImageURL: string;
-  // imageWidth?: number;
-  // imageHeight?: number;
-  // imageSize?: number;
 };
-type ImageHit = {
-  total: number;
-  totalHits: number;
-  hits: Image[];
-}
 type Props = Record<string, never>;
 type State = {
-  isLoading: boolean,
+  loadingState: "loading" | "done" | "more",
   query: string,
   isModalOpen: boolean,
   images: Image[],
   page: number,
 };
-
+const Center = styled.div`
+  display: flex;
+  justify-content: center;
+`
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 16px;
+  padding-bottom: 24px;
+`
 export default class App extends Component<Props, State> {
   // static defaultProps = {};
   // static propTypes = {};
 
-  state = {
-    isLoading: false,
+  state: State = {
+    loadingState: "done",
     query: '',
     isModalOpen: false,
     images: [],
@@ -65,21 +63,38 @@ export default class App extends Component<Props, State> {
       }
     ]
   } */
-
+  setQuery = async (query: string) => {
+    this.setState({ query, page: 1 });
+    if (query !== '') {
+      this.setState({ loadingState: "loading" });
+      const { hits } = await getPhotos(query);
+      this.setState({ images: hits, loadingState: hits.length === 0 ? "done" : "more" });
+      return;
+    }
+    this.setState({ images: [], loadingState: "done" });
+  }
+  nextPage = async () => {
+    this.setState({ loadingState: "loading", page: this.state.page + 1 });
+    const { hits } = await getPhotos(this.state.query, this.state.page + 1);
+    this.setState({ images: [...this.state.images, ...hits], loadingState: hits.length === 0 ? "done" : "more" });
+  }
   render() {
     return (
-      <div>
-
-        <Searchbar setQuery={s => this.setState({ query: s })} />
-        {/* <ImageGallery />
-        <Loader />
-        <Button />
-        <Modal /> */}
-
-      </div>
+      <Grid>
+        <Searchbar onSubmit={this.setQuery} />
+        <ImageGallery images={this.state.images} />
+        <Center>
+          <Loader visible={this.state.loadingState === "loading"} />
+          <Button visible={this.state.loadingState === "more"} nextPage={this.nextPage} />
+        </Center>
+        {/* <Modal /> */}
+      </Grid>
     )
   }
   async componentDidMount() {
+  }
+  componentDidUpdate() {
+    window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight });
   }
 
 }
