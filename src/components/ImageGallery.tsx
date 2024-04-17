@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import ImageGalleryItem from "./ImageGalleryItem";
 import { Image } from "./App";
+import React from "react";
 
 type Props = { images: Image[] }
 const StyledUl = styled.ul`
@@ -19,15 +20,20 @@ const StyledUl = styled.ul`
   margin-left: auto;
   margin-right: auto;
 `
-export default function ImageGallery({ images }: Props) {
+let lastKey = 0, deltaKey = 0;
+function ImageGallery({ images }: Props) {
+  if (images.length <= 12) deltaKey = lastKey;
+  lastKey = deltaKey + images.length;
   return (
     <StyledUl>
       {images.map((image, index) => (
-        <ImageGalleryItem key={index} image={image} />
+        <ImageGalleryItem key={deltaKey + index} image={image} />
       ))}
     </StyledUl>
   )
 }
+const ImageGalleryM = React.memo(ImageGallery)
+export default ImageGalleryM;
 
 ImageGallery.propTypes = {
   images: PropTypes.arrayOf(

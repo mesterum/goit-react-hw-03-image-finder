@@ -67,16 +67,23 @@ export default class App extends Component<Props, State> {
     this.setState({ query, page: 1 });
     if (query !== '') {
       this.setState({ loadingState: "loading" });
-      const { hits } = await getPhotos(query);
-      this.setState({ images: hits, loadingState: hits.length === 0 ? "done" : "more" });
+      const { hits, total } = await getPhotos(query);
+      this.setState({
+        images: hits,
+        loadingState: hits.length === 0 || total <= 12 ? "done" : "more"
+      });
       return;
     }
     this.setState({ images: [], loadingState: "done" });
   }
   nextPage = async () => {
-    this.setState({ loadingState: "loading", page: this.state.page + 1 });
-    const { hits } = await getPhotos(this.state.query, this.state.page + 1);
-    this.setState({ images: [...this.state.images, ...hits], loadingState: hits.length === 0 ? "done" : "more" });
+    const page = this.state.page + 1;
+    this.setState({ loadingState: "loading", page });
+    const { hits, total } = await getPhotos(this.state.query, page);
+    this.setState({
+      images: [...this.state.images, ...hits],
+      loadingState: hits.length === 0 || total <= 12 * page ? "done" : "more"
+    });
   }
   render() {
     return (
