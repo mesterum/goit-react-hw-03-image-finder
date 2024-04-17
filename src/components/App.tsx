@@ -4,7 +4,7 @@ import Searchbar from "./Searchbar";
 import ImageGallery from "./ImageGallery";
 import Loader from "./Loader";
 import Button from "./Button";
-import Modal from "./Modal";
+import Modal, { ModalCtx } from "./Modal";
 import { getPhotos } from '../pixabayAPI';
 import styled from 'styled-components';
 
@@ -19,7 +19,7 @@ type Props = Record<string, never>;
 type State = {
   loadingState: "loading" | "done" | "more",
   query: string,
-  isModalOpen: boolean,
+  imageModal: Image | null,
   images: Image[],
   page: number,
 };
@@ -40,29 +40,11 @@ export default class App extends Component<Props, State> {
   state: State = {
     loadingState: "done",
     query: '',
-    isModalOpen: false,
+    imageModal: null,
     images: [],
     page: 1,
   }
-  /* res = {
-    "total": 4692,
-    "totalHits": 500,
-    "hits": [
-      {
-        "id": 195893,
-        "pageURL": "https://pixabay.com/en/blossom-bloom-flower-195893/",
-        "type": "photo",
-        "tags": "blossom, bloom, flower",
-        "webformatURL": "https://pixabay.com/get/35bbf209e13e39d2_640.jpg",
-        "webformatWidth": 640,
-        "webformatHeight": 360,
-        "largeImageURL": "https://pixabay.com/get/ed6a99fd0a76647_1280.jpg",
-        "imageWidth": 4000,
-        "imageHeight": 2250,
-        "imageSize": 4731420,
-      }
-    ]
-  } */
+
   setQuery = async (query: string) => {
     this.setState({ query, page: 1 });
     if (query !== '') {
@@ -85,23 +67,28 @@ export default class App extends Component<Props, State> {
       loadingState: hits.length === 0 || total <= 12 * page ? "done" : "more"
     });
   }
+  setModal = (imageModal: Image | null) => this.setState({ imageModal })
   render() {
     return (
-      <Grid>
-        <Searchbar onSubmit={this.setQuery} />
-        <ImageGallery images={this.state.images} />
-        <Center>
-          <Loader visible={this.state.loadingState === "loading"} />
-          <Button visible={this.state.loadingState === "more"} nextPage={this.nextPage} />
-        </Center>
-        {/* <Modal /> */}
-      </Grid>
+      <ModalCtx.Provider value={{
+        image: this.state.imageModal,
+        setModal: this.setModal
+      }}>
+        <Grid>
+          <Searchbar onSubmit={this.setQuery} />
+          <ImageGallery images={this.state.images} />
+          <Center>
+            <Loader visible={this.state.loadingState === "loading"} />
+            <Button visible={this.state.loadingState === "more"} nextPage={this.nextPage} />
+          </Center>
+        </Grid>
+        <Modal />
+      </ModalCtx.Provider>
     )
   }
-  async componentDidMount() {
-  }
-  componentDidUpdate() {
-    window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight });
+  componentDidUpdate(_prevProps: Props, prevState: State) {
+    if (prevState.loadingState === "loading")
+      window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight });
   }
 
 }

@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import { Image } from "./App";
 import styled from "styled-components";
+import { ModalCtx } from "./Modal";
+import { useContext } from "react";
 
 type Props = { image: Image }
 const Styled = styled.li`
@@ -22,8 +24,9 @@ const Styled = styled.li`
 }`;
 
 export default function ImageGalleryItem({ image }: Props) {
+  const { setModal } = useContext(ModalCtx);
   return (
-    <Styled>
+    <Styled onClick={() => setModal(image)}>
       <img src={image.webformatURL} alt={image.tags} />
     </Styled>
   )
