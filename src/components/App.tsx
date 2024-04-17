@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import './App.css'
 import { Component } from "react";
 import Searchbar from "./Searchbar";

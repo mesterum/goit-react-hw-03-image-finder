@@ -67,7 +67,7 @@ export default styled(Searchbar)`
   width: 48px;
   height: 48px;
   border: 0;
-  background-image: url("/image-search-svgrepo-com.svg");
+  background-image: url("image-search-svgrepo-com.svg");
   background-size: 75%;
   background-repeat: no-repeat;
   background-position: center;
