@@ -1,12 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 // import './App.css'
 import { Component } from "react";
-import Searchbar from "./Searchbar";
-import ImageGallery from "./ImageGallery";
-import Loader from "./Loader";
-import Button from "./Button";
-import Modal, { ModalCtx } from "./Modal";
-import { getPhotos } from '../pixabayAPI';
+import Searchbar from "../Searchbar";
+import ImageGallery from "../ImageGallery";
+import Loader from "../Loader";
+import Button from "../Button";
+import Modal, { ModalCtx } from "../Modal";
+import { getPhotos } from '../../pixabayAPI';
 import styled from 'styled-components';
 
 
