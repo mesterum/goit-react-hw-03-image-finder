@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Image } from "./App";
+import { Image } from "./App/Images";
 import styled from "styled-components";
 import { ModalCtx } from "./Modal";
 import { useContext } from "react";

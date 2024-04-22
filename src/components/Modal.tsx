@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Image } from "./App";
+import { Image } from "./App/Images";
 import { createContext, useEffect, useContext } from "react";
 
 const Overlay = styled.div`

@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 type Props = { className?: string, onSubmit: (query: string) => void }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function Searchbar({ className, onSubmit }: Props) {
   return (
     <header className={className}>

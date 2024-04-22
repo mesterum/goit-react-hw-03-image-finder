@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import ImageGalleryItem from "./ImageGalleryItem";
-import { Image } from "./App";
+import { Image } from "./App/Images";
 import React from "react";
 
 type Props = { images: Image[] }
