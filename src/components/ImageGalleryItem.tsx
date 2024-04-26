@@ -24,7 +24,7 @@ const Styled = styled.li`
 }`;
 
 export default function ImageGalleryItem({ image }: Props) {
-  const { setModal } = useContext(ModalCtx);
+  const { setModal } = useContext(ModalCtx.Context);
   return (
     <Styled onClick={() => setModal(image)}>
       <img src={image.webformatURL} alt={image.tags} />

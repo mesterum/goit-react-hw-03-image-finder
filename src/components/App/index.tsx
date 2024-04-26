@@ -1,13 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Searchbar from "../Searchbar";
 import ImageGallery from "../ImageGallery";
 import Loader from "../Loader";
 import Button from "../Button";
 import Modal, { ModalCtx } from "../Modal";
 import styled from 'styled-components';
-import { Image, Images } from "./Images";
+import { Images } from "./Images";
 
+const ModalProvider = ModalCtx.Context.Provider
 const Center = styled.div`
   display: flex;
   justify-content: center;
@@ -19,10 +20,10 @@ const Grid = styled.div`
   padding-bottom: 24px;
 `
 export default function App() {
-  const { current: images } = useRef(new Images());
+  const images = useMemo(() => new Images(), []);
+  const modal = useMemo(() => new ModalCtx(), []);
   const state = images.useStore()
   const prevLoadingState = useRef("done");
-  const [modal, setModal] = useState<Image | null>(null);
 
   useEffect(() => {
     if (prevLoadingState.current === "loading")
@@ -31,10 +32,7 @@ export default function App() {
   }, [images.state.loadingState]);
 
   return (
-    <ModalCtx.Provider value={{
-      image: modal,
-      setModal
-    }}>
+    <ModalProvider value={modal}>
       <Grid>
         <Searchbar onSubmit={images.setQuery} />
         <ImageGallery images={state.images} />
@@ -44,7 +42,7 @@ export default function App() {
         </Center>
       </Grid>
       <Modal />
-    </ModalCtx.Provider>
+    </ModalProvider>
   )
 }
 
